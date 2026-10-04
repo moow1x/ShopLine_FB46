@@ -3,7 +3,7 @@
 **Спринт:** 1
 **Автор:** Сидоров Олександр
 
-[Відкрити беклог у Google Drive]([https://docs.google.com/spreadsheets/d/17MTwt76Hw3oQSW-mx-mgBobJW0m0WXbm/edit?gid=981777954#gid=981777954])
+[Відкрити беклог у Google Drive](https://docs.google.com/spreadsheets/d/17MTwt76Hw3oQSW-mx-mgBobJW0m0WXbm/edit?gid=981777954#gid=981777954)
 
 Беклог містить 18 історій користувача, пріоритети,
 умови перевірки та аркуш «Очікування → stories».

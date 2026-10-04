@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Defs_Order" targetNamespace="https://shopline.local/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.31.0">
+  <bpmn:collaboration id="Collab_Order" name="Оформлення замовлення">
+    <bpmn:participant id="OPB" name="Покупець" processRef="OB" />
+    <bpmn:participant id="OPS" name="Магазин" processRef="OS" />
+    <bpmn:participant id="OPAY" name="Платіжний шлюз" />
+    <bpmn:participant id="ODEL" name="Служба доставки" />
+    <bpmn:messageFlow id="M1" name="Команда оформлення" sourceRef="O11" targetRef="S2" />
+    <bpmn:messageFlow id="M2" name="Результат авторизації" sourceRef="S3" targetRef="O4" />
+    <bpmn:messageFlow id="M3" name="Адреса та спосіб оплати" sourceRef="O9" targetRef="S10" />
+    <bpmn:messageFlow id="M4" name="Запит на оплату" targetRef="OPAY" />
+    <bpmn:messageFlow id="M5" name="Відповідь шлюзу" sourceRef="OPAY" />
+    <bpmn:messageFlow id="M6" name="Підтвердження" sourceRef="S18" targetRef="O20" />
+    <bpmn:messageFlow id="M7" name="Оплату відхилено" sourceRef="S25" targetRef="O251" />
+    <bpmn:messageFlow id="M8" name="Передача замовлення" sourceRef="S21" targetRef="ODEL" />
+    <bpmn:messageFlow id="Flow_1vf75q0" sourceRef="S12" targetRef="OPAY" />
+    <bpmn:messageFlow id="Flow_1a8t0w8" sourceRef="OPAY" targetRef="S12" />
+  </bpmn:collaboration>
+  <bpmn:process id="OB" isExecutable="false">
+    <bpmn:startEvent id="O1" name="Натиснуто «Оформити»" />
+    <bpmn:intermediateThrowEvent id="O11" name="Передано команду оформлення">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="O4" name="Отримано результат авторизації">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="O5" name="Покупець авторизований?" />
+    <bpmn:task id="O6" name="Увійти або зареєструватися" />
+    <bpmn:exclusiveGateway id="O7" name="Об’єднання авторизації" />
+    <bpmn:task id="O8" name="Вказати адресу доставки" />
+    <bpmn:task id="O9" name="Обрати спосіб оплати" />
+    <bpmn:eventBasedGateway id="O91" name="Який результат отримано?" />
+    <bpmn:intermediateCatchEvent id="O20" name="Отримано підтвердження замовлення">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="O231" name="Покупець погоджується отримати замовлення?" />
+    <bpmn:task id="O23" name="Отримати замовлення" />
+    <bpmn:endEvent id="O24" name="Доставлено" />
+    <bpmn:endEvent id="O26" name="Покупець відмовився" />
+    <bpmn:sequenceFlow id="OF1" sourceRef="O1" targetRef="O11" />
+    <bpmn:sequenceFlow id="OF2" sourceRef="O11" targetRef="O4" />
+    <bpmn:sequenceFlow id="OF3" sourceRef="O4" targetRef="O5" />
+    <bpmn:sequenceFlow id="OF4" name="так" sourceRef="O5" targetRef="O7">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">authorized=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="OF5" name="ні" sourceRef="O5" targetRef="O6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">authorized=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="OF6" sourceRef="O6" targetRef="O7" />
+    <bpmn:sequenceFlow id="OF7" sourceRef="O7" targetRef="O8" />
+    <bpmn:sequenceFlow id="OF8" sourceRef="O8" targetRef="O9" />
+    <bpmn:sequenceFlow id="OF9" sourceRef="O9" targetRef="O91" />
+    <bpmn:sequenceFlow id="OF10" sourceRef="O91" targetRef="O20" />
+    <bpmn:sequenceFlow id="OF11" sourceRef="O91" targetRef="O251" />
+    <bpmn:sequenceFlow id="OF12" sourceRef="O20" targetRef="O231" />
+    <bpmn:sequenceFlow id="OF16" sourceRef="O251" targetRef="O252" />
+    <bpmn:sequenceFlow id="OF13" name="так" sourceRef="O231" targetRef="O23">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">accept=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="OF15" name="ні" sourceRef="O231" targetRef="O26">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">accept=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="OF14" sourceRef="O23" targetRef="O24" />
+    <bpmn:intermediateCatchEvent id="O251" name="Отримано «Оплату відхилено»">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="O252" name="Оплату відхилено" />
+  </bpmn:process>
+  <bpmn:process id="OS" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_OS">
+      <bpmn:lane id="OSYS" name="Система">
+        <bpmn:flowNodeRef>S19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S14</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S27</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="OMAN" name="Менеджер">
+        <bpmn:flowNodeRef>S21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S25</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>S22</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SF21" sourceRef="S21" targetRef="S22" />
+    <bpmn:sequenceFlow id="SF19" sourceRef="S19" targetRef="S21" />
+    <bpmn:sequenceFlow id="SF17" sourceRef="S17" targetRef="S19" />
+    <bpmn:sequenceFlow id="SF18" sourceRef="S18" targetRef="S19" />
+    <bpmn:sequenceFlow id="SF16b" sourceRef="S16" targetRef="S17" />
+    <bpmn:sequenceFlow id="SF16a" sourceRef="S16" targetRef="S18" />
+    <bpmn:sequenceFlow id="SF15" sourceRef="S15" targetRef="S16" />
+    <bpmn:sequenceFlow id="SF14" sourceRef="S14" targetRef="S15" />
+    <bpmn:sequenceFlow id="SF13n" name="ні" sourceRef="S13" targetRef="S25">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">approved=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF13y" name="так" sourceRef="S13" targetRef="S14">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">approved=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF11n" name="інший спосіб" sourceRef="S11" targetRef="S14">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">online=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF10" sourceRef="S10" targetRef="S11" />
+    <bpmn:sequenceFlow id="SF3" sourceRef="S3" targetRef="S10" />
+    <bpmn:sequenceFlow id="SF2" sourceRef="S2" targetRef="S3" />
+    <bpmn:dataObjectReference id="D31" name="Рахунок-інвойс" dataObjectRef="D31_Data" />
+    <bpmn:dataObject id="D31_Data" />
+    <bpmn:dataObjectReference id="D30" name="Замовлення" dataObjectRef="D30_Data" />
+    <bpmn:dataObject id="D30_Data" />
+    <bpmn:parallelGateway id="S19" name="Синхронізація" />
+    <bpmn:task id="S17" name="Скомплектувати замовлення" />
+    <bpmn:task id="S18" name="Надіслати підтвердження покупцю" />
+    <bpmn:parallelGateway id="S16" name="Які дії виконати після створення замовлення?" />
+    <bpmn:task id="S15" name="Створити замовлення та рахунок-інвойс" />
+    <bpmn:exclusiveGateway id="S13" name="Оплату схвалено?">
+      <bpmn:incoming>SF12</bpmn:incoming>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="S11" name="Обрано онлайн-оплату?">
+      <bpmn:outgoing>SF11y</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="S10" name="Отримано дані оформлення">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="S3" name="Перевірити авторизацію покупця" />
+    <bpmn:startEvent id="S2" name="Отримано команду оформлення">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="S25" name="Оплату відхилено">
+      <bpmn:incoming>SF27</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="S14" name="Об’єднання способів оплати" />
+    <bpmn:sequenceFlow id="SF12" sourceRef="S12" targetRef="S13" />
+    <bpmn:sequenceFlow id="SF11y" name="онлайн" sourceRef="S11" targetRef="S12">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">online=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SF27" sourceRef="S27" targetRef="S25" />
+    <bpmn:task id="S12" name="Опрацювати онлайн-оплату">
+      <bpmn:incoming>SF11y</bpmn:incoming>
+      <bpmn:outgoing>SF12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:boundaryEvent id="S27" name="Оплата не надійшла за 24 години" attachedToRef="S12">
+      <bpmn:outgoing>SF27</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDuration>PT24H</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:task id="S21" name="Передати замовлення службі доставки" />
+    <bpmn:endEvent id="S22" name="Замовлення передано в доставку" />
+    <bpmn:association id="Assoc_D31_S15" associationDirection="None" sourceRef="D31" targetRef="S15" />
+    <bpmn:association id="Assoc_D30_S15" associationDirection="None" sourceRef="D30" targetRef="S15" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_Order">
+    <bpmndi:BPMNPlane id="Plane_Order" bpmnElement="Collab_Order">
+      <bpmndi:BPMNShape id="Shape_OPB" bpmnElement="OPB" isHorizontal="true">
+        <dc:Bounds x="160" y="40" width="1900" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O1" bpmnElement="O1">
+        <dc:Bounds x="200" y="110" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="185" y="146" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O11" bpmnElement="O11">
+        <dc:Bounds x="285" y="107" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="273" y="149" width="66" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O4" bpmnElement="O4">
+        <dc:Bounds x="420" y="107" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="412" y="149" width="58" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O5" bpmnElement="O5" isMarkerVisible="true">
+        <dc:Bounds x="525" y="103" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="509" y="153" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O6" bpmnElement="O6">
+        <dc:Bounds x="620" y="155" width="160" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O7" bpmnElement="O7" isMarkerVisible="true">
+        <dc:Bounds x="810" y="103" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="805" y="153" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O8" bpmnElement="O8">
+        <dc:Bounds x="910" y="88" width="160" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O9" bpmnElement="O9">
+        <dc:Bounds x="1110" y="88" width="160" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O91" bpmnElement="O91">
+        <dc:Bounds x="1310" y="103" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1296" y="65.5" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O20" bpmnElement="O20">
+        <dc:Bounds x="1430" y="70" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1442" y="112" width="76" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O231" bpmnElement="O231" isMarkerVisible="true">
+        <dc:Bounds x="1535" y="68" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1526" y="118" width="69" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O23" bpmnElement="O23">
+        <dc:Bounds x="1635" y="55" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O24" bpmnElement="O24">
+        <dc:Bounds x="1820" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1808" y="108" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O26" bpmnElement="O26">
+        <dc:Bounds x="1640" y="165" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1629" y="201" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O251" bpmnElement="O251">
+        <dc:Bounds x="1449" y="169" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1441" y="211" width="58" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_O252" bpmnElement="O252">
+        <dc:Bounds x="1552" y="180" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1544" y="216" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_OF1" bpmnElement="OF1">
+        <di:waypoint x="236" y="128" />
+        <di:waypoint x="285" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF2" bpmnElement="OF2">
+        <di:waypoint x="327" y="128" />
+        <di:waypoint x="420" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF3" bpmnElement="OF3">
+        <di:waypoint x="462" y="128" />
+        <di:waypoint x="525" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF4" bpmnElement="OF4">
+        <di:waypoint x="575" y="128" />
+        <di:waypoint x="810" y="128" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="685" y="103" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF5" bpmnElement="OF5">
+        <di:waypoint x="575" y="128" />
+        <di:waypoint x="620" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="593" y="134" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF6" bpmnElement="OF6">
+        <di:waypoint x="780" y="190" />
+        <di:waypoint x="810" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF7" bpmnElement="OF7">
+        <di:waypoint x="860" y="128" />
+        <di:waypoint x="910" y="123" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF8" bpmnElement="OF8">
+        <di:waypoint x="1070" y="123" />
+        <di:waypoint x="1110" y="123" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF9" bpmnElement="OF9">
+        <di:waypoint x="1270" y="123" />
+        <di:waypoint x="1310" y="128" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF10" bpmnElement="OF10">
+        <di:waypoint x="1360" y="128" />
+        <di:waypoint x="1430" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF11" bpmnElement="OF11">
+        <di:waypoint x="1335" y="153" />
+        <di:waypoint x="1335" y="210" />
+        <di:waypoint x="1464" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF12" bpmnElement="OF12">
+        <di:waypoint x="1472" y="91" />
+        <di:waypoint x="1535" y="93" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF16" bpmnElement="OF16">
+        <di:waypoint x="1491" y="189" />
+        <di:waypoint x="1516" y="189" />
+        <di:waypoint x="1516" y="199" />
+        <di:waypoint x="1552" y="199" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF13" bpmnElement="OF13">
+        <di:waypoint x="1585" y="93" />
+        <di:waypoint x="1635" y="90" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1602" y="67" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF15" bpmnElement="OF15">
+        <di:waypoint x="1585" y="93" />
+        <di:waypoint x="1640" y="183" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1608" y="113" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_OF14" bpmnElement="OF14">
+        <di:waypoint x="1775" y="90" />
+        <di:waypoint x="1820" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_OPS" bpmnElement="OPS" isHorizontal="true">
+        <dc:Bounds x="160" y="300" width="1998" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OMAN" bpmnElement="OMAN" isHorizontal="true">
+        <dc:Bounds x="190" y="470" width="1968" height="130" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OSYS" bpmnElement="OSYS" isHorizontal="true">
+        <dc:Bounds x="190" y="300" width="1968" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_D31" bpmnElement="D31">
+        <dc:Bounds x="1320" y="435" width="45" height="55" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1304" y="490" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_D30" bpmnElement="D30">
+        <dc:Bounds x="1240" y="435" width="45" height="55" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1231" y="490" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S21" bpmnElement="S21">
+        <dc:Bounds x="1830" y="500" width="190" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S19" bpmnElement="S19">
+        <dc:Bounds x="1750" y="405" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1739" y="455" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S17" bpmnElement="S17">
+        <dc:Bounds x="1530" y="505" width="180" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S18" bpmnElement="S18">
+        <dc:Bounds x="1530" y="335" width="190" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S16" bpmnElement="S16">
+        <dc:Bounds x="1430" y="350" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1414" y="400" width="83" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S15" bpmnElement="S15">
+        <dc:Bounds x="1180" y="335" width="210" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S13" bpmnElement="S13" isMarkerVisible="true">
+        <dc:Bounds x="960" y="350" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="953" y="400" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S11" bpmnElement="S11" isMarkerVisible="true">
+        <dc:Bounds x="630" y="350" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="614" y="400" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S10" bpmnElement="S10">
+        <dc:Bounds x="530" y="355" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="513" y="397" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S3" bpmnElement="S3">
+        <dc:Bounds x="300" y="338" width="180" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S2" bpmnElement="S2">
+        <dc:Bounds x="232" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="217" y="348" width="66" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S25" bpmnElement="S25">
+        <dc:Bounds x="1077" y="432" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1069" y="468" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S14" bpmnElement="S14" isMarkerVisible="true">
+        <dc:Bounds x="1045" y="315" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1029" y="365" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07au2qx_di" bpmnElement="S12">
+        <dc:Bounds x="760" y="330" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S22" bpmnElement="S22">
+        <dc:Bounds x="2052" y="502" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2090" y="505" width="63" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S27" bpmnElement="S27">
+        <dc:Bounds x="762" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="690" y="418" width="79" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_SF21" bpmnElement="SF21">
+        <di:waypoint x="2020" y="521" />
+        <di:waypoint x="2052" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF19" bpmnElement="SF19">
+        <di:waypoint x="1800" y="430" />
+        <di:waypoint x="1830" y="460" />
+        <di:waypoint x="1830" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF17" bpmnElement="SF17">
+        <di:waypoint x="1710" y="540" />
+        <di:waypoint x="1750" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF18" bpmnElement="SF18">
+        <di:waypoint x="1720" y="370" />
+        <di:waypoint x="1750" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF16b" bpmnElement="SF16b">
+        <di:waypoint x="1480" y="375" />
+        <di:waypoint x="1530" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF16a" bpmnElement="SF16a">
+        <di:waypoint x="1480" y="375" />
+        <di:waypoint x="1530" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF15" bpmnElement="SF15">
+        <di:waypoint x="1390" y="370" />
+        <di:waypoint x="1430" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF14" bpmnElement="SF14">
+        <di:waypoint x="1093" y="342" />
+        <di:waypoint x="1150" y="342" />
+        <di:waypoint x="1150" y="361" />
+        <di:waypoint x="1180" y="361" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF13n" bpmnElement="SF13n">
+        <di:waypoint x="1010" y="375" />
+        <di:waypoint x="1010" y="450" />
+        <di:waypoint x="1077" y="450" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1029" y="431" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF13y" bpmnElement="SF13y">
+        <di:waypoint x="1010" y="375" />
+        <di:waypoint x="1028" y="375" />
+        <di:waypoint x="1028" y="340" />
+        <di:waypoint x="1045" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1029" y="315" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF11n" bpmnElement="SF11n">
+        <di:waypoint x="666" y="361" />
+        <di:waypoint x="700" y="320" />
+        <di:waypoint x="950" y="320" />
+        <di:waypoint x="1049" y="336" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="880" y="303" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF10" bpmnElement="SF10">
+        <di:waypoint x="572" y="376" />
+        <di:waypoint x="630" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF3" bpmnElement="SF3">
+        <di:waypoint x="480" y="373" />
+        <di:waypoint x="530" y="376" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF2" bpmnElement="SF2">
+        <di:waypoint x="268" y="330" />
+        <di:waypoint x="284" y="330" />
+        <di:waypoint x="284" y="373" />
+        <di:waypoint x="300" y="373" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF12" bpmnElement="SF12">
+        <di:waypoint x="860" y="375" />
+        <di:waypoint x="960" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF11y" bpmnElement="SF11y">
+        <di:waypoint x="680" y="375" />
+        <di:waypoint x="760" y="375" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="703" y="350" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_SF27" bpmnElement="SF27">
+        <di:waypoint x="780" y="428" />
+        <di:waypoint x="780" y="460" />
+        <di:waypoint x="1080" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Assoc_D31_S15" bpmnElement="Assoc_D31_S15">
+        <di:waypoint x="1365" y="462.5" />
+        <di:waypoint x="1395" y="562.5" />
+        <di:waypoint x="1150" y="562.5" />
+        <di:waypoint x="1180" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Assoc_D30_S15" bpmnElement="Assoc_D30_S15">
+        <di:waypoint x="1285" y="462.5" />
+        <di:waypoint x="1315" y="562.5" />
+        <di:waypoint x="1150" y="562.5" />
+        <di:waypoint x="1180" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_OPAY" bpmnElement="OPAY" isHorizontal="true">
+        <dc:Bounds x="680" y="650" width="300" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_ODEL" bpmnElement="ODEL" isHorizontal="true">
+        <dc:Bounds x="1680" y="650" width="300" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_M1" bpmnElement="M1">
+        <di:waypoint x="326" y="135" />
+        <di:waypoint x="300" y="260" />
+        <di:waypoint x="266" y="321" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="247" y="216" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M2" bpmnElement="M2">
+        <di:waypoint x="480" y="348" />
+        <di:waypoint x="480" y="280" />
+        <di:waypoint x="426" y="142" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="451" y="223" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M3" bpmnElement="M3">
+        <di:waypoint x="1220" y="158" />
+        <di:waypoint x="1090" y="250" />
+        <di:waypoint x="960" y="250" />
+        <di:waypoint x="710" y="290" />
+        <di:waypoint x="564" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="981" y="225" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M6" bpmnElement="M6">
+        <di:waypoint x="1655" y="335" />
+        <di:waypoint x="1590" y="300" />
+        <di:waypoint x="1445" y="111" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1574" y="273" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M7" bpmnElement="M7">
+        <di:waypoint x="1110" y="441" />
+        <di:waypoint x="1240" y="250" />
+        <di:waypoint x="1300" y="200" />
+        <di:waypoint x="1454" y="176" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1224" y="216" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M8" bpmnElement="M8">
+        <di:waypoint x="1913" y="570" />
+        <di:waypoint x="1750" y="630" />
+        <di:waypoint x="1727" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1779" y="616" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vf75q0_di" bpmnElement="Flow_1vf75q0">
+        <di:waypoint x="842" y="410" />
+        <di:waypoint x="842" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a8t0w8_di" bpmnElement="Flow_1a8t0w8">
+        <di:waypoint x="810" y="650" />
+        <di:waypoint x="810" y="410" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

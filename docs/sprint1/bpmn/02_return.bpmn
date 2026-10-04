@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Defs_Return" targetNamespace="https://shopline.local/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.31.0">
+  <bpmn:collaboration id="Collab_Return" name="Повернення товару">
+    <bpmn:participant id="RPB" name="Покупець" processRef="RB" />
+    <bpmn:participant id="RPS" name="Магазин" processRef="RS" />
+    <bpmn:participant id="RD" name="Служба доставки" />
+    <bpmn:messageFlow id="RM1" name="Заявка на повернення" sourceRef="R2" targetRef="Q3" />
+    <bpmn:messageFlow id="RM2" name="Позитивний результат" sourceRef="Q41" targetRef="R22" />
+    <bpmn:messageFlow id="RM3" name="Відмовлено" sourceRef="Q16" targetRef="R23" />
+    <bpmn:messageFlow id="RM4" name="Результат повернення" sourceRef="Q12" targetRef="R13" />
+    <bpmn:textAnnotation id="RAN">
+      <bpmn:text>Перевіряється строк 14 днів.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_RAN_Q5" associationDirection="None" sourceRef="RAN" targetRef="Q5" />
+  </bpmn:collaboration>
+  <bpmn:process id="RB" isExecutable="false">
+    <bpmn:sequenceFlow id="RF9" sourceRef="R131" targetRef="R14" />
+    <bpmn:sequenceFlow id="RF8" sourceRef="R23" targetRef="R131" />
+    <bpmn:sequenceFlow id="RF7" sourceRef="R13" targetRef="R131" />
+    <bpmn:sequenceFlow id="RF6" sourceRef="R7" targetRef="R13" />
+    <bpmn:sequenceFlow id="RF5" sourceRef="R22" targetRef="R7" />
+    <bpmn:sequenceFlow id="RF4" sourceRef="R21" targetRef="R23" />
+    <bpmn:sequenceFlow id="RF3" sourceRef="R21" targetRef="R22" />
+    <bpmn:sequenceFlow id="RF2" sourceRef="R2" targetRef="R21" />
+    <bpmn:sequenceFlow id="RF1" sourceRef="R1" targetRef="R2" />
+    <bpmn:intermediateCatchEvent id="R23" name="Отримано відмову">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="R14" name="Отримано результат повернення" />
+    <bpmn:exclusiveGateway id="R131" name="Об’єднання результату" />
+    <bpmn:intermediateCatchEvent id="R13" name="Отримано повідомлення про повернення">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="R7" name="Надіслати товар" />
+    <bpmn:intermediateCatchEvent id="R22" name="Отримано позитивний результат">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:eventBasedGateway id="R21" name="Який результат перевірки отримано?" />
+    <bpmn:task id="R2" name="Вказати номер замовлення і причину повернення" />
+    <bpmn:startEvent id="R1" name="Подано заявку на повернення" />
+  </bpmn:process>
+  <bpmn:process id="RS" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_RS">
+      <bpmn:lane id="RY" name="Система">
+        <bpmn:flowNodeRef>Q11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q12</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="RA" name="Бухгалтерія">
+        <bpmn:flowNodeRef>Q10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q121</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="RW" name="Склад">
+        <bpmn:flowNodeRef>Q6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q91</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q9</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="RM" name="Менеджер">
+        <bpmn:flowNodeRef>Q5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q41</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Q16</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:exclusiveGateway id="Q5" name="Строк і підстави підтверджено?" />
+    <bpmn:intermediateCatchEvent id="Q6" name="Товар надійшов на повернення">
+      <bpmn:conditionalEventDefinition>
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">itemReturned=true</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Q8" name="Перевірити комплектність і стан товару" />
+    <bpmn:task id="Q10" name="Повернути кошти" />
+    <bpmn:task id="Q11" name="Повернути одиницю товару на залишок" />
+    <bpmn:task id="Q12" name="Надіслати повідомлення покупцю" />
+    <bpmn:endEvent id="Q15" name="Кошти повернуто" />
+    <bpmn:endEvent id="Q17" name="Часткове повернення" />
+    <bpmn:exclusiveGateway id="Q121" name="Який результат визначено?" />
+    <bpmn:exclusiveGateway id="Q91" name="Об’єднання стану товару" />
+    <bpmn:intermediateThrowEvent id="Q41" name="Передано позитивний результат">
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:task id="Q4" name="Перевірити строк повернення та підстави" />
+    <bpmn:startEvent id="Q3" name="Отримано заявку на повернення">
+      <bpmn:messageEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:dataObjectReference id="RDO" name="Заявка на повернення" dataObjectRef="RDO_Data" />
+    <bpmn:dataObject id="RDO_Data" />
+    <bpmn:endEvent id="Q16" name="Відмовлено">
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Q9" name="Товар придатний чи пошкоджений?" />
+    <bpmn:sequenceFlow id="QF4" sourceRef="Q4" targetRef="Q5" />
+    <bpmn:sequenceFlow id="QF5y" name="так" sourceRef="Q5" targetRef="Q41">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">allowed=true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QF5n" name="ні" sourceRef="Q5" targetRef="Q16">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">allowed=false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QF41" sourceRef="Q41" targetRef="Q6" />
+    <bpmn:sequenceFlow id="QF6" sourceRef="Q6" targetRef="Q8" />
+    <bpmn:sequenceFlow id="QF8" sourceRef="Q8" targetRef="Q9" />
+    <bpmn:sequenceFlow id="QF91" sourceRef="Q91" targetRef="Q10" />
+    <bpmn:sequenceFlow id="QF10" sourceRef="Q10" targetRef="Q11" />
+    <bpmn:sequenceFlow id="QF11" sourceRef="Q11" targetRef="Q12" />
+    <bpmn:sequenceFlow id="QF12" sourceRef="Q12" targetRef="Q121" />
+    <bpmn:sequenceFlow id="QFfull" name="повне" sourceRef="Q121" targetRef="Q15">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">condition=good</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QFpart" name="часткове" sourceRef="Q121" targetRef="Q17">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">condition=damaged</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QF9g" name="придатний" sourceRef="Q9" targetRef="Q91">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">condition=good</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QF9d" name="пошкоджений" sourceRef="Q9" targetRef="Q91">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">condition=damaged</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="QF3" sourceRef="Q3" targetRef="Q4" />
+    <bpmn:association id="Assoc_RDO_Q4" associationDirection="None" sourceRef="RDO" targetRef="Q4" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_Return">
+    <bpmndi:BPMNPlane id="Plane_Return" bpmnElement="Collab_Return">
+      <bpmndi:BPMNShape id="Shape_RPB" bpmnElement="RPB" isHorizontal="true">
+        <dc:Bounds x="160" y="40" width="1800" height="210" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R1" bpmnElement="R1">
+        <dc:Bounds x="200" y="110" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="192" y="146" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R2" bpmnElement="R2">
+        <dc:Bounds x="290" y="90" width="210" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R21" bpmnElement="R21">
+        <dc:Bounds x="550" y="100" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="536" y="50" width="78" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R22" bpmnElement="R22">
+        <dc:Bounds x="660" y="65" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="652" y="107" width="59" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R7" bpmnElement="R7">
+        <dc:Bounds x="770" y="55" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R13" bpmnElement="R13">
+        <dc:Bounds x="1400" y="65" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1380" y="107" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R131" bpmnElement="R131" isMarkerVisible="true">
+        <dc:Bounds x="1530" y="100" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1525" y="150" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R14" bpmnElement="R14">
+        <dc:Bounds x="1650" y="107" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1638" y="150" width="61" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_R23" bpmnElement="R23">
+        <dc:Bounds x="669" y="165" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="156" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_RF1" bpmnElement="RF1">
+        <di:waypoint x="236" y="128" />
+        <di:waypoint x="290" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF2" bpmnElement="RF2">
+        <di:waypoint x="500" y="125" />
+        <di:waypoint x="550" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF3" bpmnElement="RF3">
+        <di:waypoint x="600" y="125" />
+        <di:waypoint x="660" y="86" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF4" bpmnElement="RF4">
+        <di:waypoint x="575" y="150" />
+        <di:waypoint x="575" y="207" />
+        <di:waypoint x="690" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF5" bpmnElement="RF5">
+        <di:waypoint x="702" y="86" />
+        <di:waypoint x="770" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF6" bpmnElement="RF6">
+        <di:waypoint x="910" y="90" />
+        <di:waypoint x="1400" y="86" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF7" bpmnElement="RF7">
+        <di:waypoint x="1442" y="86" />
+        <di:waypoint x="1530" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF8" bpmnElement="RF8">
+        <di:waypoint x="711" y="188" />
+        <di:waypoint x="1330" y="188" />
+        <di:waypoint x="1534" y="129" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RF9" bpmnElement="RF9">
+        <di:waypoint x="1580" y="125" />
+        <di:waypoint x="1650" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_RPS" bpmnElement="RPS" isHorizontal="true">
+        <dc:Bounds x="160" y="285" width="1800" height="440" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RM" bpmnElement="RM" isHorizontal="true">
+        <dc:Bounds x="190" y="285" width="1770" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RW" bpmnElement="RW" isHorizontal="true">
+        <dc:Bounds x="190" y="395" width="1770" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RA" bpmnElement="RA" isHorizontal="true">
+        <dc:Bounds x="190" y="505" width="1770" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RY" bpmnElement="RY" isHorizontal="true">
+        <dc:Bounds x="190" y="615" width="1770" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q5" bpmnElement="Q5" isMarkerVisible="true">
+        <dc:Bounds x="550" y="315" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="534" y="421" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q6" bpmnElement="Q6">
+        <dc:Bounds x="770" y="430" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="751" y="472" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q8" bpmnElement="Q8">
+        <dc:Bounds x="880" y="415" width="200" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q10" bpmnElement="Q10">
+        <dc:Bounds x="1330" y="525" width="150" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q11" bpmnElement="Q11">
+        <dc:Bounds x="1510" y="635" width="200" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q12" bpmnElement="Q12">
+        <dc:Bounds x="1740" y="635" width="190" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q15" bpmnElement="Q15">
+        <dc:Bounds x="1910" y="505" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1955.5" y="516" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q17" bpmnElement="Q17">
+        <dc:Bounds x="1910" y="575" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1949" y="581" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q121" bpmnElement="Q121" isMarkerVisible="true">
+        <dc:Bounds x="1615" y="520" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1556" y="561" width="78" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q91" bpmnElement="Q91" isMarkerVisible="true">
+        <dc:Bounds x="1245" y="410" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1287" y="403" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q41" bpmnElement="Q41">
+        <dc:Bounds x="770" y="304" width="42" height="42" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="345" width="59" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q4" bpmnElement="Q4">
+        <dc:Bounds x="315" y="303" width="210" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q3" bpmnElement="Q3">
+        <dc:Bounds x="242" y="325" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="216" y="361" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RDO" bpmnElement="RDO">
+        <dc:Bounds x="387" y="387" width="45" height="55" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="379" y="442" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q16" bpmnElement="Q16">
+        <dc:Bounds x="660" y="347" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="648" y="383" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Q9" bpmnElement="Q9" isMarkerVisible="true">
+        <dc:Bounds x="1125" y="410" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1107" y="460" width="87" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_QF4" bpmnElement="QF4">
+        <di:waypoint x="525" y="338" />
+        <di:waypoint x="538" y="338" />
+        <di:waypoint x="538" y="340" />
+        <di:waypoint x="550" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF5y" bpmnElement="QF5y">
+        <di:waypoint x="594" y="334" />
+        <di:waypoint x="620" y="324" />
+        <di:waypoint x="770" y="324" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="702" y="308" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF5n" bpmnElement="QF5n">
+        <di:waypoint x="595" y="345" />
+        <di:waypoint x="630" y="381" />
+        <di:waypoint x="670" y="381" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="640" y="360" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF41" bpmnElement="QF41">
+        <di:waypoint x="790" y="346" />
+        <di:waypoint x="790" y="388" />
+        <di:waypoint x="791" y="388" />
+        <di:waypoint x="791" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF6" bpmnElement="QF6">
+        <di:waypoint x="812" y="451" />
+        <di:waypoint x="880" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF8" bpmnElement="QF8">
+        <di:waypoint x="1080" y="450" />
+        <di:waypoint x="1103" y="450" />
+        <di:waypoint x="1103" y="435" />
+        <di:waypoint x="1125" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF91" bpmnElement="QF91">
+        <di:waypoint x="1295" y="435" />
+        <di:waypoint x="1295" y="560" />
+        <di:waypoint x="1330" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF10" bpmnElement="QF10">
+        <di:waypoint x="1480" y="560" />
+        <di:waypoint x="1510" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF11" bpmnElement="QF11">
+        <di:waypoint x="1710" y="670" />
+        <di:waypoint x="1740" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF12" bpmnElement="QF12">
+        <di:waypoint x="1789" y="635" />
+        <di:waypoint x="1640" y="598" />
+        <di:waypoint x="1640" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QFfull" bpmnElement="QFfull">
+        <di:waypoint x="1645" y="525" />
+        <di:waypoint x="1780" y="525" />
+        <di:waypoint x="1914" y="512" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1764" y="528" width="31" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QFpart" bpmnElement="QFpart">
+        <di:waypoint x="1665" y="545" />
+        <di:waypoint x="1732" y="547" />
+        <di:waypoint x="1910" y="593" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1838" y="564" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF9g" bpmnElement="QF9g">
+        <di:waypoint x="1175" y="435" />
+        <di:waypoint x="1245" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1184" y="418" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF9d" bpmnElement="QF9d">
+        <di:waypoint x="1167" y="443" />
+        <di:waypoint x="1190" y="455" />
+        <di:waypoint x="1265" y="455" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1193" y="458" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_QF3" bpmnElement="QF3">
+        <di:waypoint x="278" y="342" />
+        <di:waypoint x="315" y="342" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Assoc_RDO_Q4" bpmnElement="Assoc_RDO_Q4">
+        <di:waypoint x="387" y="411" />
+        <di:waypoint x="330" y="405" />
+        <di:waypoint x="323" y="372" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Shape_RD" bpmnElement="RD" isHorizontal="true">
+        <dc:Bounds x="1420" y="780" width="350" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_RAN" bpmnElement="RAN">
+        <dc:Bounds x="1000" y="660" width="220" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_RM1" bpmnElement="RM1">
+        <di:waypoint x="441" y="160" />
+        <di:waypoint x="340" y="220" />
+        <di:waypoint x="256" y="326" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="166" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RM2" bpmnElement="RM2">
+        <di:waypoint x="812" y="324" />
+        <di:waypoint x="812" y="213" />
+        <di:waypoint x="790" y="145" />
+        <di:waypoint x="695" y="102" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="819" y="249" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RM3" bpmnElement="RM3">
+        <di:waypoint x="690" y="347" />
+        <di:waypoint x="690" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="331" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_RM4" bpmnElement="RM4">
+        <di:waypoint x="1866" y="635" />
+        <di:waypoint x="1730" y="560" />
+        <di:waypoint x="1610" y="450" />
+        <di:waypoint x="1410" y="104" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1609" y="439" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Assoc_RAN_Q5" bpmnElement="Assoc_RAN_Q5">
+        <di:waypoint x="1000" y="685" />
+        <di:waypoint x="870" y="685" />
+        <di:waypoint x="670" y="550" />
+        <di:waypoint x="550" y="340" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

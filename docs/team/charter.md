@@ -4,11 +4,11 @@
 
 |№|ПІБ|Github-логін|Контакт|Сильні сторони (аналітика / моделювання / Java / тексти / презентації)|
 |-|-|-|-|-|
-|1|Марченко Артем|-|marchenko.artem_fb46@edu.kpi.ua|-|
-|2|Петренко Валентин|-|petrenko.valentyn_fb46@edu.kpi.ua|-|
-|3|Сидоров Олександр|-|sydorov.oleksandr_fb46@edu.kpi.ua|-|
-|4|Черватюк Євгеній|-|chervatiuk.yevhenii_fb46@edu.kpi.ua|-|
-|5|Якимчук Єгор|-|yakymchuk.yehor_fb46@edu.kpi.ua|-|
+|1|Марченко Артем|Dango21a|marchenko.artem_fb46@edu.kpi.ua|-|
+|2|Петренко Валентин|PentestRenko|petrenko.valentyn_fb46@edu.kpi.ua|-|
+|3|Сидоров Олександр|CodableBase|sydorov.oleksandr_fb46@edu.kpi.ua|-|
+|4|Черватюк Євгеній|chervatiukyevheniifb46|chervatiuk.yevhenii_fb46@edu.kpi.ua|-|
+|5|Якимчук Єгор|moow1x|yakymchuk.yehor_fb46@edu.kpi.ua|-|
 
 # 1.2 Графік Ротації Ролей
 

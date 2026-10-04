@@ -7,7 +7,7 @@
 |1|Марченко Артем|-|marchenko.artem_fb46@edu.kpi.ua|-|
 |2|Петренко Валентин|-|petrenko.valentyn_fb46@edu.kpi.ua|-|
 |3|Сидоров Олександр|-|sydorov.oleksandr_fb46@edu.kpi.ua|-|
-|4|Черватюк Євгеній|-||-|
+|4|Черватюк Євгеній|-|chervatiuk.yevhenii_fb46@edu.kpi.ua|-|
 |5|Якимчук Єгор|-|yakymchuk.yehor_fb46@edu.kpi.ua|-|
 
 # 1.2 Графік Ротації Ролей

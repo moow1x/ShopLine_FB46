@@ -1,409 +1,84 @@
-# Реєстр дефектів · ШопЛайн · Спринт 3
+# Реєстр дефектів — Sprint 3 («ШопЛайн», demo practicesoftwaretesting.com)
 
-Реєстр у Markdown за §4.15 методички. Статус New — зафіксовано під час попереднього прогону. Поля Reviewer заповнює СМ після фактичної перевірки.
+Reporter: Черватюк Євгеній · Date: 15.11.2026 · Status: New · Reviewer: Петренко В.
 
-## BUG-001 · Нижній повзунок Price Range приймає 0 замість 1
 
-**Severity:** Minor  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-003 / F-50  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Межа ціни виходить за задокументований діапазон; каталог залишається доступним.
-Severity — Граничні параметри фільтра відрізняються від SRS, решта функцій працює. Priority — Інші кейси можна виконувати.
-
-### Steps to reproduce
-
-1. Відкрити головну сторінку Toolshop у чистому сеансі, EN.
-2. Сфокусувати нижній повзунок Price Range, де поточне значення 1.
-3. Натиснути ArrowLeft один раз і прочитати значення нижньої межі.
-
-### Actual result
-
-Нижній повзунок переходить з 1 на 0 після ArrowLeft; DOM aria-valuemin=0, aria-valuenow=0.
-
-### Expected result
-
-F-50 · Нижня межа 1, повзунок не приймає 0.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-001-1.jpg](attachments/BUG-001-1.jpg)
+| Bug ID | Title | Severity | Priority | Linked | Status |
+|---|---|---|---|---|---|
+| BUG-001 | Quantity = 0 автоматично замінюється на 1 замість повідомлення про помилку | Minor | P3 | TC-014; GUI-30 | New |
+| BUG-002 | Кошик приймає сумарну кількість понад 99 при повторному додаванні (50 + 50) | Major | P3 | TC-017; F-90, BL-20 | New |
+| BUG-003 | У підсумку оформлення відсутній рядок вартості доставки (Shipping) | Major | P3 | TC-020; F-110, BL-60 | New |
+| BUG-004 | Вкладення у контактній формі: приймаються лише порожні файли, для решти — «File should be empty» | Major | P3 | TC-025; F-140 | New |
+| BUG-005 | Відновлення пароля: замість повідомлення про успіх показано ключ «page.forgot-password.confirm» | Minor | P3 | TC-007; F-30 | New |
 
 ---
-
-## BUG-002 · Неприпустиме Quantity на сторінці товару мовчки замінюється і товар додається
-
-**Severity:** Normal  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-012, TC-013, TC-014 / GUI-30  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Користувач може покласти в кошик іншу кількість, ніж ввів; покупець має перевірити кошик вручну.
-Severity — Кошик доступний, але помилкове введення дає неочікуваний стан. Priority — Інші незалежні сценарії доступні, є обхід через коректні значення.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop як гість із порожнім кошиком.
-2. Відкрити Combination Pliers.
-3. Ввести 0 у Quantity і натиснути Tab.
-4. Натиснути Add to cart.
-5. Перевірити повідомлення і кошик. Для варіантів 100 та 1.5 повторити з порожнім кошиком.
-
-### Actual result
-
-Після Tab 0 → 1, 100 → 99, 1.5 → 1. Натискання Add to cart додає замінене значення.
-
-### Expected result
-
-GUI-30 · Показати помилку для неприпустимого значення, не додавати позицію.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-002-1.jpg](attachments/BUG-002-1.jpg), [BUG-002-2.jpg](attachments/BUG-002-2.jpg)
-
----
-
-## BUG-003 · Додавання 99 одиниць двічі може створити рядок з 198 одиницями
-
-**Severity:** Major  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-017 / F-90, BL-20  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Кошик порушує жорстку межу кількості; сума рядка зростає до $2,801.70. 198 спостерігалось у двох відтвореннях після очікування першого підтвердження. У додатковій спробі з іншим моментом натискання залишилось 99.
-Severity — Важливе бізнес-обмеження кошика не виконується. Priority — Нормальні кількості та інші незалежні кейси доступні. Повне оформлення цього стану не перевірялося.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop як гість із порожнім кошиком.
-2. Відкрити Combination Pliers.
-3. Ввести 99 у Quantity.
-4. Натиснути Add to cart і дочекатися Product added to shopping cart.
-5. Натиснути Add to cart ще раз.
-6. Відкрити Cart і перевірити Quantity рядка Combination Pliers.
-
-### Actual result
-
-Після двох Add to cart з 99, із очікуванням першого повідомлення, Cart має один рядок Quantity 198.
-
-### Expected result
-
-F-90, BL-20 · Після першого додавання Quantity 99. Друге відхиляється з повідомленням, рядок лишається 99.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-003-1.jpg](attachments/BUG-003-1.jpg)
-
----
-
-## BUG-004 · Загальний Total не перераховується після зміни кількості
-
-**Severity:** Major  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-019 / F-100, BL-40  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Кошик показує дві різні суми для однієї позиції; покупець бачить помилковий підсумок до оформлення.
-Severity — Порушено важливий розрахунок кошика. Priority — Інші кейси можна виконувати; фінальний інвойс не перевірявся.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop як гість із порожнім кошиком.
-2. Відкрити Combination Pliers за $14.15.
-3. Ввести 2 і натиснути Add to cart.
-4. Дочекатися підтвердження і повторити додавання.
-5. Відкрити Cart і перевірити, що Quantity = 4, Total = $56.60.
-6. Ввести 3 у Quantity цього рядка.
-7. Натиснути Tab, порівняти суму рядка й загальний Total.
-
-### Actual result
-
-При 4 → 3 ціна $14.15, сума рядка $42.45, загальний Total $56.60 навіть через 4 с.
-
-### Expected result
-
-F-100, BL-40 · Обидві суми мають стати $42.45 після редагування.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-004-1.jpg](attachments/BUG-004-1.jpg)
-
----
-
-## BUG-005 · У повідомленні відмови в обраному є зайва крапка
-
-**Severity:** Trivial  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-022 / GUI-40, F-120  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Розбіжність лише з дослівно наведеним текстом SRS. Відмова гостю відображається; користувач отримує потрібну інформацію.
-Severity — Косметична різниця одного символу. Priority — Жоден незалежний сценарій не заблокований.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop у гостьовому сеансі, EN.
-2. Відкрити Combination Pliers.
-3. Натиснути Add to favourites.
-4. Прочитати текст відмови до зникнення сповіщення.
-
-### Actual result
-
-Unauthorized, can not add product to your favorite list.
-
-### Expected result
-
-GUI-40, F-120 · Unauthorized, can not add product to your favorite list
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-005-1.jpg](attachments/BUG-005-1.jpg)
-
----
-
-## BUG-006 · У шапці каталогу показано TOOLSHOP DEMO замість «ШопЛайн»
-
-**Severity:** Trivial  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-023 / GUI-10  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Видиме брендування відрізняється від прямої вимоги SRS. Посилання логотипа має href=/; відхилення навігації не заявляється.
-Severity — Косметична невідповідність назви у логотипі. Priority — Навігація та інші перевірки доступні.
-
-### Steps to reproduce
-
-1. Відкрити головну сторінку Toolshop у гостьовому сеансі, EN.
-2. Прочитати назву на видимому логотипі у лівій частині шапки.
-
-### Actual result
-
-На логотипі TOOLSHOP DEMO.
-
-### Expected result
-
-GUI-10 · Логотип «ШопЛайн» із посиланням на головну.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-006-1.jpg](attachments/BUG-006-1.jpg)
-
----
-
-## BUG-007 · Реєстрація відхиляє дату у форматі дд.мм.рррр
-
-**Severity:** Normal  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-028 / F-10  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Користувач, який вводить дату за SRS, отримує вимогу іншого формату; повідомлення дає змогу змінити формат.
-Severity — Валідний за контрактом ввід відхиляється; підказка пропонує інший формат. Priority — Інші незалежні сценарії доступні; успішна реєстрація не перевірялась.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop у гостьовому сеансі.
-2. Натиснути Sign in.
-3. Натиснути Register your account.
-4. Ввести 15.05.2000 у Date of Birth; інші поля лишити порожніми.
-5. Натиснути Tab.
-6. Натиснути Register і прочитати помилку під датою.
-
-### Actual result
-
-Для 15.05.2000 видно Please enter a valid date in YYYY-MM-DD format. Підказка YYYY-MM-DD.
-
-### Expected result
-
-F-10 · Дата 15.05.2000 проходить перевірку формату. Порожні інші поля можуть мати окремі помилки.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-007-1.jpg](attachments/BUG-007-1.jpg)
-
----
-
-## BUG-008 · Обов’язкове поле Subject не має видимої зірочки
-
-**Severity:** Minor  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-033 / U-20  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Користувач дізнається про обов’язковість теми лише після відправлення незаповненої форми.
-Severity — Позначка відсутня, але текстова валідація спрацьовує. Priority — Вибір теми доступний, решта кейсів не блокуються.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop у гостьовому сеансі.
-2. Натиснути Contact.
-3. Переглянути видимий підпис Subject.
-4. Не заповнюючи форму, натиснути Send.
-5. Прочитати валідацію поля Subject.
-
-### Actual result
-
-Підпис Subject без зірочки; після Send — Subject is required.
-
-### Expected result
-
-U-20 · Підпис обов’язкового Subject містить зірочку, помилка також передається текстом.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-008-1.jpg](attachments/BUG-008-1.jpg)
-
----
-
-## BUG-009 · Картка Combination Pliers використовує AVIF замість JPEG/WebP
-
-**Severity:** Minor  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-034 / GUI-80  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Формат зображення суперечить GUI-80. У перевіреному Chrome зображення відобразилось; наслідки для інших браузерів не виміряні.
-Severity — Невідповідність формату ресурсу без спостережуваної втрати відображення. Priority — Каталог і картка відкриваються.
-
-### Steps to reproduce
-
-1. Відкрити головну сторінку Toolshop.
-2. Знайти завантажене зображення Combination Pliers.
-3. Через DevTools переглянути його src, assets/img/products/pliers01.avif.
-4. Відкрити саме цей ресурс і визначити формат із сигнатури завантаженого файлу.
-
-### Actual result
-
-Файл pliers01.avif, 34 634 байти; контейнер має ftypavif, розмір зображення 640×432.
-
-### Expected result
-
-GUI-80 · Формат цього файлу JPEG або WebP. Вимірювання часу — інша перевірка.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-009-1.avif](attachments/BUG-009-1.avif)
-
----
-
-## BUG-010 · Поле рядка Cart дозволяє 100 і показує суму за 100 одиниць
-
-**Severity:** Normal  
-**Priority:** P3 (пропозиція)  
-**Linked test case / requirement:** TC-036 / F-100, BL-40  
-**Reporter:** ШІ-помічник  
-**Date:** 2026-11-12  
-**Status:** New  
-**Reviewer:** ___ · **Дата:** ___
-
-### Description
-
-Користувач бачить недопустиму кількість і розраховану за нею суму. У клієнтському інтерфейсі після Tab лишилося значення 100. Збереження на сервері не перевірене.
-Severity — Стан кошика в інтерфейсі виходить за допустимі межі, кошик залишається доступним. Priority — Інші кейси доступні, валідні значення можна вводити.
-
-### Steps to reproduce
-
-1. Відкрити Toolshop як гість із порожнім кошиком.
-2. Відкрити Combination Pliers за $14.15.
-3. Натиснути Add to cart з Quantity = 1.
-4. Відкрити Cart.
-5. Ввести 100 у Quantity рядка Combination Pliers.
-6. Натиснути Tab і прочитати кількість, суму рядка й загальний Total.
-
-### Actual result
-
-Після Tab Quantity = 100, сума рядка $1,415.00, загальний Total $14.15.
-
-### Expected result
-
-F-100, BL-40 · Не застосовувати 100; валідний стан і сума для Quantity 1 мають залишитися.
-
-### Environment
-
-https://practicesoftwaretesting.com · ENV-01 · 2026-11-12 · v2.5, Built 2026-10-11 · Chrome, гість, EN. Версію браузера та ОС не встановлено.
-
-### Attachments
-
-[BUG-010-1.jpg](attachments/BUG-010-1.jpg)
+## BUG-001 — Quantity = 0 автоматично замінюється на 1 замість повідомлення про помилку
+**Severity:** Minor  **Priority:** P3  **Linked:** TC-014; GUI-30 (SRS 1.1)
+**Description:** SRS 1.1 допускає кількість 1–99; значення 0 має відхилятися повідомленням про допустимий діапазон. Demo мовчки підставляє 1, тому покупець не дізнається про помилку введення. Severity Minor: помилка некритична, кількість лишається допустимою. P3: інші кейси не блокує.
+**Steps to reproduce:**
+1. Відкрити https://practicesoftwaretesting.com у Chromium 157.0.8103.39 (нова сесія, інкогніто).
+2. Натиснути картку «Combination Pliers».
+3. У поле «Quantity» ввести 0 (очистивши поле).
+4. Натиснути «Add to cart».
+**Actual result:** Після кроку 3–4 відбувається «Product quantity update»: значення замінюється на 1; повідомлення про допустимий діапазон немає. Товар у кошик не додано.
+**Expected result:** Товар не додано; біля поля повідомлення про допустимий діапазон 1–99; лічильник кошика не змінився (GUI-30).
+**Environment:** demo 15.11.2026; Chromium 157.0.8103.39; Windows 11; без входу.
+**Attachments:** BUG-001.png
+
+## BUG-002 — Кошик приймає сумарну кількість понад 99 при повторному додаванні (50 + 50)
+**Severity:** Major  **Priority:** P3  **Linked:** TC-017; F-90, BL-20
+**Description:** За BL-20 кількість у рядку кошика не може перевищувати 99. Demo приймає друге додавання 50 без помилки, сумарно 100. Severity Major: контроль ліміту не працює, але замовлення з допустимою кількістю оформити можна. P3: кейси не блокує.
+**Steps to reproduce:**
+1. Відкрити https://practicesoftwaretesting.com у Chromium 157.0.8103.39 (нова сесія, інкогніто, кошик порожній).
+2. Натиснути картку «Combination Pliers».
+3. У поле «Quantity» ввести 50, натиснути «Add to cart».
+4. У поле «Quantity» знову ввести 50, натиснути «Add to cart».
+5. Натиснути піктограму кошика.
+**Actual result:** Після кроку 4 помилки немає; лічильник кошика = 100.
+Після кроку 5 у кошику рядок «Combination Pliers» з кількістю 100.
+**Expected result:** Після кроку 4 — повідомлення про перевищення 99; лічильник лишається 50; у кошику рядок з кількістю 50.
+**Environment:** demo 15.11.2026; Chromium 157.0.8103.39; Windows 11; без входу.
+**Attachments:** BUG-002.png
+
+## BUG-003 — У підсумку оформлення відсутній рядок вартості доставки (Shipping)
+**Severity:** Major  **Priority:** P3  **Linked:** TC-020; F-110, BL-60
+**Description:** F-110 вимагає, щоб підсумок замовлення містив вартість доставки (0.00 від порогу, інакше 120.00). У demo рядка Shipping немає на жодному кроці. Severity Major: частина обов'язкового підсумку відсутня. P3: інші кейси не блокує. Якщо КТ вирішить, що це обмеження demo, звіт можна закрити як Rejected з обґрунтуванням.
+**Steps to reproduce:**
+1. Відкрити https://practicesoftwaretesting.com у Chromium 157.0.8103.39 (нова сесія, інкогніто).
+2. Натиснути «Sign in», увійти як customer@practicesoftwaretesting.com / welcome01.
+3. Додати в кошик «Combination Pliers» (Quantity = 1).
+4. Відкрити кошик, натиснути «Proceed to checkout» до кроку «Payment».
+5. Переглянути блок підсумку.
+**Actual result:** У підсумку немає рядка «Shipping».
+**Expected result:** У підсумку є рядок «Shipping» з вартістю доставки (F-110, BL-60).
+**Environment:** demo 15.11.2026; Chromium 157.0.8103.39; Windows 11; customer@practicesoftwaretesting.com.
+**Attachments:** BUG-003.png
+
+## BUG-004 — Вкладення у контактній формі: приймаються лише порожні файли, для решти — «File should be empty»
+**Severity:** Major  **Priority:** P3  **Linked:** TC-025; F-140
+**Description:** F-140 допускає вкладення; файл понад 100 КБ має відхилятися з повідомленням про перевищення розміру. Demo показує «File should be empty» для файлу >100 КБ, для іншого типу і для валідного .txt ≤100 КБ: приймаються лише порожні файли, тож вкладення фактично не працює, а причина відмови не видна. Severity Major: функція вкладення недоступна, але звернення без файлу надсилається. P3: кейси не блокує.
+**Steps to reproduce:**
+1. Відкрити https://practicesoftwaretesting.com у Chromium 157.0.8103.39 (нова сесія, інкогніто).
+2. Натиснути «Contact».
+3. Заповнити First name = Test; Last name = T3-Testenko; Email address = t3.contact@example.com; Subject = Customer service.
+4. У поле «Message» ввести текст довжиною 50 симв.
+5. У полі вкладення вибрати T3-attach-101KB.txt (103 424 байти).
+6. Натиснути «Send».
+**Actual result:** Повідомлення «File should be empty»; звернення не надіслано. Те саме повідомлення з'являється для звичайного .txt ≤100 КБ; приймаються лише порожні файли.
+**Expected result:** Повідомлення про перевищення допустимого розміру (до 100 КБ) (F-140).
+**Environment:** demo 15.11.2026; Chromium 157.0.8103.39; Windows 11; без входу.
+**Attachments:** BUG-004.png
+
+## BUG-005 — Відновлення пароля: замість повідомлення про успіх показано ключ «page.forgot-password.confirm»
+**Severity:** Minor  **Priority:** P3  **Linked:** TC-007; F-30
+**Description:** F-30 вимагає, щоб після надсилання форми користувач побачив повідомлення про надсилання листа. Demo показує службовий ключ локалізації «page.forgot-password.confirm», тому покупець не розуміє результат. Severity Minor: функція працює, дефект у тексті інтерфейсу. P3: кейси не блокує.
+**Steps to reproduce:**
+1. Відкрити https://practicesoftwaretesting.com у Chromium 157.0.8103.39 (нова сесія, інкогніто).
+2. Натиснути «Sign in».
+3. Натиснути посилання «Forgot your Password?».
+4. У поле «Email address» ввести customer@practicesoftwaretesting.com.
+5. Натиснути кнопку надсилання форми.
+**Actual result:** Після кроку 5 (≈1 с) показано текст «page.forgot-password.confirm».
+**Expected result:** Зрозуміле повідомлення про успішне надсилання листа для відновлення пароля (F-30).
+**Environment:** demo 15.11.2026; Chromium 157.0.8103.39; Windows 11; без входу.
+**Attachments:** BUG-005.png

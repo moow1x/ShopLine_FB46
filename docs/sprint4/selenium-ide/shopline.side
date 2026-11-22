@@ -1,0 +1,272 @@
+{
+  "id": "76ee09aa-f49f-4cbf-a914-f8490ac10471",
+  "version": "2.0",
+  "name": "ShopLine",
+  "url": "https://practicesoftwaretesting.com",
+  "tests": [
+    {
+      "id": "7e17d456-20e9-4289-bc0d-777a79a29477",
+      "name": "TC-005",
+      "commands": [
+        {
+          "id": "5ea4edcd-6b99-494c-b8b1-39750cb2465d",
+          "comment": "",
+          "command": "open",
+          "target": "/auth/login",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "ddc2d2d3-27d8-424d-9f4c-059a5769a135",
+          "comment": "",
+          "command": "setWindowSize",
+          "target": "1280x900",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "9f2b735f-e111-4549-9b74-a87af2acd29c",
+          "comment": "",
+          "command": "sendKeys",
+          "target": "css=*[data-test=\"email\"]",
+          "targets": [
+            [
+              "css=*[data-test=\"email\"]",
+              "css:data-attr"
+            ],
+            [
+              "id=email",
+              "id"
+            ],
+            [
+              "css=#email",
+              "css:finder"
+            ],
+            [
+              "xpath=//input[@id='email']",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=//input",
+              "xpath:position"
+            ]
+          ],
+          "value": "customer2@practicesoftwaretesting.com"
+        },
+        {
+          "id": "13e756b4-f7e4-4385-8a38-d520211cce27",
+          "comment": "",
+          "command": "sendKeys",
+          "target": "css=*[data-test=\"password\"]",
+          "targets": [
+            [
+              "css=*[data-test=\"password\"]",
+              "css:data-attr"
+            ],
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=//input[@id='password']",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=//app-password-input/div/input",
+              "xpath:position"
+            ]
+          ],
+          "value": "welcome01"
+        },
+        {
+          "id": "4140ec74-19b5-4b8b-b4d6-9f53fe611eef",
+          "comment": "",
+          "command": "click",
+          "target": "css=*[data-test=\"login-submit\"]",
+          "targets": [
+            [
+              "css=*[data-test=\"login-submit\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=.btnSubmit",
+              "css:finder"
+            ],
+            [
+              "xpath=//input[@value='Login']",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=//div[3]/input",
+              "xpath:position"
+            ]
+          ],
+          "value": ""
+        },
+        {
+          "id": "7932c178-0adb-4983-9a45-be1ffc80925b",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"page-title\"]",
+          "targets": [],
+          "value": "15000"
+        },
+        {
+          "id": "113c869a-24e0-41d6-8b7e-08830968fe57",
+          "comment": "",
+          "command": "assertText",
+          "target": "css=[data-test=\"page-title\"]",
+          "targets": [],
+          "value": "My account"
+        },
+        {
+          "id": "e1ea774b-b4b0-4173-8972-b1baeb809d0e",
+          "comment": "",
+          "command": "verifyElementPresent",
+          "target": "css=[data-test=\"nav-menu\"]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "de115f8d-02ee-4ca4-a13c-bc0320a4e84a",
+          "comment": "",
+          "command": "click",
+          "target": "css=[data-test=\"nav-menu\"]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b1a45c87-7595-404c-b0b6-9d16dda45957",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"nav-sign-out\"]",
+          "targets": [],
+          "value": "15000"
+        },
+        {
+          "id": "ec390d2e-fe6d-4d15-b769-ff5b9a3dc447",
+          "comment": "",
+          "command": "click",
+          "target": "css=[data-test=\"nav-sign-out\"]",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "b79c9fba-1b14-485e-a169-fb5ec237586b",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"nav-sign-in\"]",
+          "targets": [],
+          "value": "15000"
+        },
+        {
+          "id": "d5a3206f-146f-446c-93cc-ad56648fd9db",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=[data-test=\"nav-sign-in\"]",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "1daf0fdf-665b-4c66-83d8-db5fd721e8dc",
+      "name": "TC-010",
+      "commands": [
+        {
+          "id": "d8fc7a0b-60be-45af-818a-b517540e2c13",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "setWindowSize",
+          "target": "1280x900",
+          "value": "",
+          "id": "7225c855-a740-4811-937f-226100ade84e"
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"search-query\"]",
+          "value": "15000",
+          "id": "7cd3f7ba-1b40-4c45-ab43-ec1426381b18"
+        },
+        {
+          "command": "type",
+          "target": "css=[data-test=\"search-query\"]",
+          "value": "PliErs",
+          "id": "340b0afc-67ce-4798-8d09-2e353186d483"
+        },
+        {
+          "command": "click",
+          "target": "css=[data-test=\"search-submit\"]",
+          "value": "",
+          "id": "a181e8c1-ef18-4dc0-98e0-fb3ae649a0b5"
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"search-caption\"]",
+          "value": "15000",
+          "id": "6d5a4719-30c3-412c-9090-c4978b9d6838"
+        },
+        {
+          "command": "assertText",
+          "target": "css=[data-test=\"search-caption\"]",
+          "value": "Searched for: PliErs",
+          "id": "7ef399e8-1f0a-499d-b811-d689a0ad37c1"
+        },
+        {
+          "command": "waitForElementVisible",
+          "target": "css=[data-test=\"product-name\"]",
+          "value": "15000",
+          "id": "594449fb-cb47-4053-b5c7-b47c977639d3"
+        },
+        {
+          "command": "verifyElementPresent",
+          "target": "css=[data-test=\"product-name\"]",
+          "value": "",
+          "id": "a527ff89-1a70-4c52-bbd0-e3cb442df576"
+        },
+        {
+          "command": "click",
+          "target": "css=[data-test=\"search-reset\"]",
+          "value": "",
+          "id": "4658d472-f9d5-4cd6-9a6d-65a29f9c1c8d"
+        },
+        {
+          "command": "waitForElementNotVisible",
+          "target": "css=[data-test=\"search-caption\"]",
+          "value": "15000",
+          "id": "9dde4388-2155-43f1-86de-0a04e793d9d0"
+        },
+        {
+          "command": "verifyValue",
+          "target": "css=[data-test=\"search-query\"]",
+          "value": "",
+          "id": "48569861-a226-4df2-af8e-7edfc5f6bc9a"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "068d216a-ac33-43b3-90de-aadccc5a457f",
+      "name": "Default Suite",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "7e17d456-20e9-4289-bc0d-777a79a29477",
+        "1daf0fdf-665b-4c66-83d8-db5fd721e8dc"
+      ]
+    }
+  ],
+  "urls": [
+    "https://practicesoftwaretesting.com/"
+  ],
+  "plugins": []
+}
